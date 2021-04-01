@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on MarWinsWorld</title>
+    <link>https://marwinsworld.github.io/categories/</link>
+    <description>Recent content in Categories on MarWinsWorld</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 29 Mar 2021 09:28:05 +0200</lastBuildDate><atom:link href="https://marwinsworld.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Home Lab</title>
+      <link>https://marwinsworld.github.io/categories/home-lab/</link>
+      <pubDate>Mon, 29 Mar 2021 09:28:05 +0200</pubDate>
+      
+      <guid>https://marwinsworld.github.io/categories/home-lab/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Learning</title>
+      <link>https://marwinsworld.github.io/categories/learning/</link>
+      <pubDate>Mon, 29 Mar 2021 09:28:05 +0200</pubDate>
+      
+      <guid>https://marwinsworld.github.io/categories/learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MangementPi</title>
+      <link>https://marwinsworld.github.io/categories/mangementpi/</link>
+      <pubDate>Mon, 29 Mar 2021 09:28:05 +0200</pubDate>
+      
+      <guid>https://marwinsworld.github.io/categories/mangementpi/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

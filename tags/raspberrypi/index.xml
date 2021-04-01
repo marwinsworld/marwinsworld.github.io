@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RaspberryPi on MarWinsWorld</title>
+    <link>https://marwinsworld.github.io/tags/raspberrypi/</link>
+    <description>Recent content in RaspberryPi on MarWinsWorld</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 29 Mar 2021 09:25:07 +0200</lastBuildDate><atom:link href="https://marwinsworld.github.io/tags/raspberrypi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Install Docker on the Management Pi</title>
+      <link>https://marwinsworld.github.io/post/raspberry-docker/</link>
+      <pubDate>Mon, 29 Mar 2021 09:25:07 +0200</pubDate>
+      
+      <guid>https://marwinsworld.github.io/post/raspberry-docker/</guid>
+      <description>&lt;p&gt;Now, since we&amp;rsquo;ve set up the OS and Ansible, let&amp;rsquo;s go for the next step and install Docker.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Install Ansible on the Management Pi</title>
+      <link>https://marwinsworld.github.io/post/raspberry-ansible/</link>
+      <pubDate>Sun, 28 Mar 2021 17:12:47 +0200</pubDate>
+      
+      <guid>https://marwinsworld.github.io/post/raspberry-ansible/</guid>
+      <description>&lt;p&gt;After we&amp;rsquo;ve set up the OS, let&amp;rsquo;s go ahead and install Ansible.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu Focal Fossa (20.04) on the Management Pi</title>
+      <link>https://marwinsworld.github.io/post/raspberry-ubuntu-20.04/</link>
+      <pubDate>Sun, 28 Mar 2021 17:11:47 +0200</pubDate>
+      
+      <guid>https://marwinsworld.github.io/post/raspberry-ubuntu-20.04/</guid>
+      <description>&lt;p&gt;Want to create a mini Ubuntu 20.04 server running on a spare Raspberry Pi 3+ to act as a Home Lab Management Server? This article describes how to setup your Pi easily.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Management Pi</title>
+      <link>https://marwinsworld.github.io/post/raspberry-managment-pi/</link>
+      <pubDate>Sun, 28 Mar 2021 17:11:00 +0200</pubDate>
+      
+      <guid>https://marwinsworld.github.io/post/raspberry-managment-pi/</guid>
+      <description>&lt;p&gt;Owning a home lab for testing things like infrastructure as code (IaC), containers, and Kubernetes and always wanted to orchestrate the environment with exactly these technologies? Here&amp;rsquo;s an easy way on how to build an always-on management server, based on a spare Raspberry Pi.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

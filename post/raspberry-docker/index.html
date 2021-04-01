@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="MarWinsWorld">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://marwinsworld.github.io//images/banner.jpg">
+    <meta property="twitter:image" content="https://marwinsworld.github.io//images/banner.jpg" />
+    
+
+    
+    <meta name="title" content="Install Docker on the Management Pi" />
+    <meta property="og:title" content="Install Docker on the Management Pi" />
+    <meta property="twitter:title" content="Install Docker on the Management Pi" />
+    
+
+    
+    <meta name="description" content="">
+    <meta property="og:description" content="" />
+    <meta property="twitter:description" content="" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Markus, Winkler, Raspberry, Pi, Docker, Kubernetes, Container, Smart Home, Automation, API, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Install Docker on the Management Pi-Markus Winkler Blog</title>
+
+    <link rel="canonical" href="/post/raspberry-docker/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">MarWinsWorld</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/home-lab">home-lab</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/learning">learning</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/mangementpi">mangementpi</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/top/about/">ABOUT</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/images/banner.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/mangementpi" title="MangementPi">
+                            MangementPi
+                        </a>
+                        
+                        <a class="tag" href="/tags/ubuntu" title="Ubuntu">
+                            Ubuntu
+                        </a>
+                        
+                        <a class="tag" href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        <a class="tag" href="/tags/raspberrypi" title="RaspberryPi">
+                            RaspberryPi
+                        </a>
+                        
+                    </div>
+                    <h1>Install Docker on the Management Pi</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                MarWinsWorld
+                         
+                        on 
+                        Monday, March 29, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#install-docker-on-ubuntu-focal-fossa-2004">Install Docker on Ubuntu Focal Fossa (20.04)</a>
+      <ul>
+        <li><a href="#install-docker">Install Docker</a></li>
+        <li><a href="#install-docker-compose">Install Docker-Compose</a></li>
+      </ul>
+    </li>
+    <li><a href="#the-container-stack-on-the-managementpi">The Container Stack on the ManagementPi</a></li>
+  </ul>
+</nav>
+                
+                <p>Now, since we&rsquo;ve set up the OS and Ansible, let&rsquo;s go for the next step and install Docker.</p>
+<h2 id="install-docker-on-ubuntu-focal-fossa-2004">Install Docker on Ubuntu Focal Fossa (20.04)</h2>
+<h3 id="install-docker">Install Docker</h3>
+<p>The installation of Docker on our ManagementPi is pretty straight forward since we can use the helper script provided by Docker. For simplicity we will allow our user <code>ubuntu</code> to run docker commands without sudo. That might not be the most secure way on production systems, though.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -fsSL get.docker.com -o get-docker.sh <span style="color:#f92672">&amp;&amp;</span> sudo sh get-docker.sh
+sudo usermod -aG docker ubuntu <span style="color:#f92672">&amp;&amp;</span> sudo service docker start
+sudo systemctl enable docker
+</code></pre></div><h3 id="install-docker-compose">Install Docker-Compose</h3>
+<p>Compose is a tool for defining and running multi-container Docker applications. On the ManagementPi we will use Compose to define the container stack running locally on our server only. Install it with the following two commands:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo apt install -y libffi-dev libssl-dev python3-dev python3 python3-pip
+sudo pip3 install docker-compose
+</code></pre></div><h2 id="the-container-stack-on-the-managementpi">The Container Stack on the ManagementPi</h2>
+<p>For the start, we&rsquo;re not going to run many containers on the ManagementPi - we stick to Portainer and Watchtower for now. Portainer is a very popular Open Source Container Management GUI which we can use to monitor and manage all our container environments. Watchtower is a process for watching your Docker containers and automatically restarting them whenever their base image is refreshed. As a reference, the watchtower source is located here: <a href="https://github.com/containrrr/watchtower">https://github.com/containrrr/watchtower</a>.</p>
+<p>Create a file called <code>docker-compose.yaml</code> with the following contents in the home directory of your <code>ubuntu</code>-user:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">version</span>: <span style="color:#e6db74">&#34;3.2&#34;</span>
+<span style="color:#f92672">services</span>:
+
+<span style="color:#75715e"># ##########################################################################</span>
+<span style="color:#75715e"># Management</span>
+<span style="color:#75715e"># ##########################################################################</span>
+
+  <span style="color:#f92672">portainer</span>:
+    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">portainer</span>
+    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">portainer/portainer-ce:latest</span>
+    <span style="color:#f92672">volumes</span>:
+      - <span style="color:#ae81ff">/home/ubuntu/portainer:/data</span>
+      - <span style="color:#ae81ff">/var/run/docker.sock:/var/run/docker.sock</span>
+      - <span style="color:#ae81ff">/etc/localtime:/etc/localtime:ro</span>
+      - <span style="color:#ae81ff">/etc/timezone:/etc/timezone:ro</span>
+    <span style="color:#f92672">ports</span>:
+      - <span style="color:#ae81ff">9000</span>:<span style="color:#ae81ff">9000</span>
+      <span style="color:#75715e">#- 8000:8000</span>
+    <span style="color:#f92672">restart</span>: <span style="color:#ae81ff">always</span>
+
+  <span style="color:#f92672">watchtower</span>:
+    <span style="color:#f92672">container_name</span>: <span style="color:#ae81ff">watchtower</span>
+    <span style="color:#f92672">image</span>: <span style="color:#ae81ff">v2tec/watchtower:latest</span>
+    <span style="color:#f92672">volumes</span>:
+      - <span style="color:#ae81ff">/var/run/docker.sock:/var/run/docker.sock</span>
+      - <span style="color:#ae81ff">/etc/localtime:/etc/localtime:ro</span>
+      - <span style="color:#ae81ff">/etc/timezone:/etc/timezone:ro</span>
+    <span style="color:#f92672">command</span>: --<span style="color:#ae81ff">interval 300 --cleanup --debug</span>
+    <span style="color:#f92672">restart</span>: <span style="color:#ae81ff">always</span>
+</code></pre></div><p>Next, create the referenced <code>portainer</code> directory where Portainer will store it&rsquo;s persistent data</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mkdir -p /home/ubuntu/portainer
+</code></pre></div><p>Create the stack with</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker-compose up -d
+</code></pre></div><p>After a couple of seconds you should be able to point your broser to <a href="http://IP:9000">http://IP:9000</a>, whereby IP should be replaced with the IP of your ManagementPi. We&rsquo;re going to configure Portainer for remote hosts in one of the following blog posts.</p>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/raspberry-ansible/" data-toggle="tooltip" data-placement="top" title="Install Ansible on the Management Pi">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/raspberry-playbooks/" data-toggle="tooltip" data-placement="top" title="First Ansible Playbooks">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/ansible" title="ansible">
+                            ansible
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mangementpi" title="mangementpi">
+                            mangementpi
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/raspberrypi" title="raspberrypi">
+                            raspberrypi
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ubuntu" title="ubuntu">
+                            ubuntu
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="MarWinsWorld" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:winkler.info@icloud.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/mawinkler">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/markus-winkler-785baa34/">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/11304166/maralex">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    <li>
+                        <a target="_blank" href="https://www.reddit.com/user/heldchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-reddit fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+            
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; MarWinsWorld 2021
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
