@@ -223,9 +223,11 @@
                 <p>Let&rsquo;s start playing with Ansible.</p>
 <h2 id="inventory">Inventory</h2>
 <p>Ok, before we can start playing with Ansible, we need to tell Ansible about our home lab, of course. In public cloud environments or real-life datacenters, we&rsquo;d do that with dynamic inventories, since the environment is typically changing continuously. At least within my home lab that is not the case. For that reason, I can stick to a static inventory file.</p>
-<p>Let&rsquo;s go ahead and create one, which is an easy task since we can define that with a simple yaml file. Here&rsquo;s an example how it could look like:</p>
-<p>manager/hosts.yaml</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">all</span>:
+<p>Let&rsquo;s go ahead and create one, which is an easy task since we can define that with a simple yaml file. We create that file within the directory <code>manager/inventory</code> and name it <code>hosts.yaml</code>.</p>
+<p>Here&rsquo;s an example how it could look like:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mkdir -p manager/inventory/hosts.yaml
+vi manager/inventory/hosts.yaml
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">all</span>:
   <span style="color:#f92672">children</span>:
     <span style="color:#f92672">home</span>:
       <span style="color:#f92672">hosts</span>:
@@ -234,7 +236,7 @@
           <span style="color:#f92672">ansible_ssh_user</span>: <span style="color:#ae81ff">markus</span>
 
         <span style="color:#f92672">mqttbridge</span>:
-          <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">192.168.2.10</span>
+          <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">mqttbridge.localdomain</span>
           <span style="color:#f92672">ansible_ssh_user</span>: <span style="color:#ae81ff">ubuntu</span>
           
         <span style="color:#f92672">iobroker</span>:
