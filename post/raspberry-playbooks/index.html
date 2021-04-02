@@ -216,17 +216,24 @@
                 </header>
                 <nav id="TableOfContents">
   <ul>
+    <li><a href="#file-structure-on-the-managementpi">File Structure on the ManagementPi</a></li>
     <li><a href="#inventory">Inventory</a></li>
+    <li><a href="#a-playbook-to-start-with---update-the-development-host">A Playbook to start with - Update the Development Host</a></li>
+    <li><a href="#a-simple-menu-to-run-the-playbooks">A simple Menu to run the Playbooks</a></li>
   </ul>
 </nav>
                 
                 <p>Let&rsquo;s start playing with Ansible.</p>
+<h2 id="file-structure-on-the-managementpi">File Structure on the ManagementPi</h2>
+<p>For the start, we need to create a very simple file structure to host our future Ansible playbooks, the inventory, variables and secrets.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mkdir -p ~/manager/inventory
+mkdir -p ~/manager/vars
+</code></pre></div><p>We will place the inventory file within <code>manager/inventory</code>, and our variables and secrets within an envrypted vault file in <code>manager/vars</code>. For now, our future playbooks will go to the <code>manager</code> directory directly.</p>
 <h2 id="inventory">Inventory</h2>
 <p>Ok, before we can start playing with Ansible, we need to tell Ansible about our home lab, of course. In public cloud environments or real-life datacenters, we&rsquo;d do that with dynamic inventories, since the environment is typically changing continuously. At least within my home lab that is not the case. For that reason, I can stick to a static inventory file.</p>
 <p>Let&rsquo;s go ahead and create one, which is an easy task since we can define that with a simple yaml file. We create that file within the directory <code>manager/inventory</code> and name it <code>hosts.yaml</code>.</p>
 <p>Here&rsquo;s an example how it could look like:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mkdir -p manager/inventory/hosts.yaml
-vi manager/inventory/hosts.yaml
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi ~/manager/inventory/hosts.yaml
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">all</span>:
   <span style="color:#f92672">children</span>:
     <span style="color:#f92672">home</span>:
@@ -268,9 +275,10 @@ vi manager/inventory/hosts.yaml
         <span style="color:#f92672">k8sn3.localdomain</span>:
           <span style="color:#f92672">ansible_ssh_user</span>: <span style="color:#ae81ff">k8s</span>
 
-</code></pre></div><p>Update dev</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
-<span style="color:#75715e"># - hosts: smarthome, media, dev, k8s</span>
+</code></pre></div><h2 id="a-playbook-to-start-with---update-the-development-host">A Playbook to start with - Update the Development Host</h2>
+<p>So, this is going to be a very easy playbook. Since in my example the development host I&rsquo;m using is based on Ubuntu as well, we simply use the Ansible module for <code>apt</code> to update all the packeges to the latest versions</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi manager/update-dev.yaml
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
 - <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">dev</span>
   <span style="color:#f92672">become</span>: <span style="color:#66d9ef">true</span>
   <span style="color:#f92672">become_user</span>: <span style="color:#ae81ff">root</span>
@@ -300,6 +308,35 @@ vi manager/inventory/hosts.yaml
         <span style="color:#f92672">test_command</span>: <span style="color:#ae81ff">uptime</span>
       <span style="color:#f92672">when</span>: <span style="color:#ae81ff">reboot_required_file.stat.exists</span>
 
+</code></pre></div><p>Being in the manager subdirectory we can easily run the playbook with</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ansible-playbook --vault-password-file ../.vault-pass.txt update-dev.yaml
+</code></pre></div><h2 id="a-simple-menu-to-run-the-playbooks">A simple Menu to run the Playbooks</h2>
+<p>Since I don&rsquo;t like to always type long ansible-playbook commands I created a handy shell based menu to discover available playbooks and run it directly.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi ~/manger/menu.sh
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+env_options<span style="color:#f92672">=(</span><span style="color:#e6db74">&#34;secrets&#34;</span> <span style="color:#e6db74">&#34;playbooks&#34;</span> <span style="color:#f92672">)</span>
+
+echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
+<span style="color:#66d9ef">select</span> opt in <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>env_options[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">do</span>
+  <span style="color:#66d9ef">case</span> $opt in
+    <span style="color:#e6db74">&#34;secrets&#34;</span><span style="color:#f92672">)</span>
+    ansible-vault edit --vault-password-file ../.vault-pass.txt ./vars/secrets.yaml
+    exit <span style="color:#ae81ff">0</span>
+    ;;
+    <span style="color:#e6db74">&#34;playbooks&#34;</span><span style="color:#f92672">)</span>
+    env_playbooks<span style="color:#f92672">=(</span> <span style="color:#66d9ef">$(</span>find . -maxdepth <span style="color:#ae81ff">1</span> -name <span style="color:#ae81ff">\*</span>.yaml  -exec basename <span style="color:#f92672">{}</span> .yml <span style="color:#ae81ff">\;</span> | sort <span style="color:#66d9ef">)</span> <span style="color:#f92672">)</span>
+    echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
+    <span style="color:#66d9ef">select</span> opt in <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>env_playbooks[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+    <span style="color:#66d9ef">do</span>
+      ansible-playbook --vault-password-file ../.vault-pass.txt $opt
+      exit <span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">done</span>
+    ;;
+    *<span style="color:#f92672">)</span> echo <span style="color:#e6db74">&#34;invalid option </span>$REPLY<span style="color:#e6db74">&#34;</span>;;
+  <span style="color:#66d9ef">esac</span>
+<span style="color:#66d9ef">done</span>
 </code></pre></div><p>Create a container</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
 - <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">mqttbridge</span>
@@ -335,28 +372,14 @@ vi manager/inventory/hosts.yaml
         <span style="color:#f92672">group</span>: <span style="color:#e6db74">&#39;1883&#39;</span>
         <span style="color:#f92672">owner</span>: <span style="color:#e6db74">&#39;1883&#39;</span>
         <span style="color:#f92672">content</span>: |<span style="color:#e6db74">
-</span><span style="color:#e6db74">          # Place your local configuration in /mosquitto/config/conf.d/
-</span><span style="color:#e6db74">          # pid_file /var/run/mosquitto.pid
-</span><span style="color:#e6db74">
 </span><span style="color:#e6db74">          persistence true
 </span><span style="color:#e6db74">          persistence_location /mosquitto/data/
 </span><span style="color:#e6db74">
 </span><span style="color:#e6db74">          user mosquitto
-</span><span style="color:#e6db74">
 </span><span style="color:#e6db74">          password_file /mosquitto/config/etc/passwd
 </span><span style="color:#e6db74">          allow_anonymous false
 </span><span style="color:#e6db74">
-</span><span style="color:#e6db74">          # Port to use for the default listener.
 </span><span style="color:#e6db74">          listener 1883
-</span><span style="color:#e6db74">          #protocol websockets
-</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">          # Encryption
-</span><span style="color:#e6db74">          #cafile /mosquitto/config/certs/mqtt_ca.crt
-</span><span style="color:#e6db74">          #certfile /mosquitto/config/certs/mqtt_srv.crt
-</span><span style="color:#e6db74">          #keyfile /mosquitto/config/certs/mqtt_srv.key
-</span><span style="color:#e6db74">          #cafile /mosquitto/config/certs/mqtt_ca.crt
-</span><span style="color:#e6db74">          #certfile /mosquitto/config/certs/mqtt_srv.crt
-</span><span style="color:#e6db74">          #keyfile /mosquitto/config/certs/mqtt_srv.key
 </span><span style="color:#e6db74">
 </span><span style="color:#e6db74">          log_dest file /mosquitto/log/mosquitto.log
 </span><span style="color:#e6db74">          include_dir /mosquitto/config/conf.d</span>          
@@ -409,7 +432,7 @@ vi manager/inventory/hosts.yaml
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/raspberry-docker/" data-toggle="tooltip" data-placement="top" title="Install Docker on the Management Pi">&larr;
+                        <a href="/post/raspberry-docker/" data-toggle="tooltip" data-placement="top" title="Install Docker on the ManagementPi">&larr;
                             Previous Post</a>
                     </li>
                     
