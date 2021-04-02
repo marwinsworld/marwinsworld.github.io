@@ -219,7 +219,9 @@
     <li><a href="#file-structure-on-the-managementpi">File Structure on the ManagementPi</a></li>
     <li><a href="#inventory">Inventory</a></li>
     <li><a href="#a-playbook-to-start-with---update-the-development-host">A Playbook to start with - Update the Development Host</a></li>
-    <li><a href="#a-simple-menu-to-run-the-playbooks">A simple Menu to run the Playbooks</a></li>
+    <li><a href="#variables-secrets-and-the-ansible-vault">Variables, Secrets and the Ansible Vault</a></li>
+    <li><a href="#a-simple-menu-to-run-the-playbooks-and-edit-the-secrets">A simple Menu to run the Playbooks and Edit the Secrets</a></li>
+    <li><a href="#create-a-container-with-configuration-files">Create a Container with Configuration Files</a></li>
   </ul>
 </nav>
                 
@@ -276,8 +278,8 @@ mkdir -p ~/manager/vars
           <span style="color:#f92672">ansible_ssh_user</span>: <span style="color:#ae81ff">k8s</span>
 
 </code></pre></div><h2 id="a-playbook-to-start-with---update-the-development-host">A Playbook to start with - Update the Development Host</h2>
-<p>So, this is going to be a very easy playbook. Since in my example the development host I&rsquo;m using is based on Ubuntu as well, we simply use the Ansible module for <code>apt</code> to update all the packeges to the latest versions</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi manager/update-dev.yaml
+<p>So, this is going to be a very easy playbook. Since in my example the development host I&rsquo;m using is based on Ubuntu as well, we simply use the Ansible module for <code>apt</code> to update all the packages to the latest versions</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi ~/manager/update-dev.yaml
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
 - <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">dev</span>
   <span style="color:#f92672">become</span>: <span style="color:#66d9ef">true</span>
@@ -310,12 +312,22 @@ mkdir -p ~/manager/vars
 
 </code></pre></div><p>Being in the manager subdirectory we can easily run the playbook with</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ansible-playbook --vault-password-file ../.vault-pass.txt update-dev.yaml
-</code></pre></div><h2 id="a-simple-menu-to-run-the-playbooks">A simple Menu to run the Playbooks</h2>
+</code></pre></div><h2 id="variables-secrets-and-the-ansible-vault">Variables, Secrets and the Ansible Vault</h2>
+<p>Our upcoming playbooks to require some secrets for authentication or other to be protected confidential information. We will store all that within the Ansible Vault, which eases the handling, encryption and decryption of this kind of information.</p>
+<p>To create a vault which we can then include in our playbooks we simply run</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ansible-vault create --vault-password-file ../.vault-pass.txt ./vars/secrets.yaml
+</code></pre></div><p>If we ever need to change, add or remove a variable we run</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ansible-vault edit --vault-password-file ../.vault-pass.txt ./vars/secrets.yaml
+</code></pre></div><p>This will typically launch vi with an editable secrets file. As soon as you close the editor, the file will be automatically encrypted again.</p>
+<p>An example for variables stored within the secrets file is shown below:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">docker_hub_username</span>: <span style="color:#ae81ff">&lt;DOCKER HUB USERNAME&gt;</span>
+<span style="color:#f92672">docker_hub_password</span>: <span style="color:#ae81ff">&lt;DOCKER HUB PASSWORD&gt;</span>
+</code></pre></div><h2 id="a-simple-menu-to-run-the-playbooks-and-edit-the-secrets">A simple Menu to run the Playbooks and Edit the Secrets</h2>
 <p>Since I don&rsquo;t like to always type long ansible-playbook commands I created a handy shell based menu to discover available playbooks and run it directly.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi ~/manger/menu.sh
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi ~/manager/menu.sh
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/bash
 </span><span style="color:#75715e"></span>
-env_options<span style="color:#f92672">=(</span><span style="color:#e6db74">&#34;secrets&#34;</span> <span style="color:#e6db74">&#34;playbooks&#34;</span> <span style="color:#f92672">)</span>
+env_options<span style="color:#f92672">=(</span> <span style="color:#e6db74">&#34;secrets&#34;</span> <span style="color:#e6db74">&#34;playbooks&#34;</span> <span style="color:#f92672">)</span>
 
 echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
 <span style="color:#66d9ef">select</span> opt in <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>env_options[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
@@ -337,7 +349,8 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
     *<span style="color:#f92672">)</span> echo <span style="color:#e6db74">&#34;invalid option </span>$REPLY<span style="color:#e6db74">&#34;</span>;;
   <span style="color:#66d9ef">esac</span>
 <span style="color:#66d9ef">done</span>
-</code></pre></div><p>Create a container</p>
+</code></pre></div><h2 id="create-a-container-with-configuration-files">Create a Container with Configuration Files</h2>
+<p>Here, we&rsquo;re going to create a container on the target machine <code>mqttbridge</code> alongside to the necessary configuration files. The container will act as a mqtt bridge, relaying authenticated mqtt messages to an internal mqtt server.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
 - <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">mqttbridge</span>
   <span style="color:#75715e"># become: true</span>
@@ -379,7 +392,7 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
 </span><span style="color:#e6db74">          password_file /mosquitto/config/etc/passwd
 </span><span style="color:#e6db74">          allow_anonymous false
 </span><span style="color:#e6db74">
-</span><span style="color:#e6db74">          listener 1883
+</span><span style="color:#e6db74">          listener {{ mqtt_external_port }}
 </span><span style="color:#e6db74">
 </span><span style="color:#e6db74">          log_dest file /mosquitto/log/mosquitto.log
 </span><span style="color:#e6db74">          include_dir /mosquitto/config/conf.d</span>          
@@ -394,7 +407,7 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
         <span style="color:#f92672">owner</span>: <span style="color:#e6db74">&#39;1883&#39;</span>
         <span style="color:#f92672">content</span>: |<span style="color:#e6db74">
 </span><span style="color:#e6db74">          connection dmz_int
-</span><span style="color:#e6db74">          address 192.168.1.115:1883
+</span><span style="color:#e6db74">          address {{ mqtt_internal_ip }}:{{ mqtt_internal_port }}
 </span><span style="color:#e6db74">          topic # out</span>          
 
     - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Create Mosquitto Passwords</span>
@@ -416,8 +429,8 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
           - <span style="color:#ae81ff">/etc/localtime:/etc/localtime:ro</span>
           - <span style="color:#ae81ff">/etc/timezone:/etc/timezone:ro</span>
         <span style="color:#f92672">published_ports</span>:
-          - <span style="color:#ae81ff">1883</span>:<span style="color:#ae81ff">1883</span>
-          - <span style="color:#ae81ff">9001</span>:<span style="color:#ae81ff">9001</span>
+          - <span style="color:#e6db74">&#34;{{ mqtt_external_port }}&#34;</span>:<span style="color:#e6db74">&#34;{{ mqtt_external_port }}&#34;</span>
+          <span style="color:#75715e"># - 9001:9001</span>
         <span style="color:#f92672">detach</span>: <span style="color:#66d9ef">true</span>
         <span style="color:#f92672">recreate</span>: <span style="color:#66d9ef">true</span>
         <span style="color:#f92672">restart_policy</span>: <span style="color:#ae81ff">always</span>
