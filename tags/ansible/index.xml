@@ -17,11 +17,11 @@
     </item>
     
     <item>
-      <title>Install Ansible on the ManagementPi</title>
-      <link>https://marwinsworld.github.io/post/raspberry-ansible/</link>
+      <title>Install Ansible &amp; Docker on the ManagementPi</title>
+      <link>https://marwinsworld.github.io/post/raspberry-ansible-docker/</link>
       <pubDate>Sun, 28 Mar 2021 17:12:47 +0200</pubDate>
       
-      <guid>https://marwinsworld.github.io/post/raspberry-ansible/</guid>
+      <guid>https://marwinsworld.github.io/post/raspberry-ansible-docker/</guid>
       <description>&lt;p&gt;After we&amp;rsquo;ve set up the OS, let&amp;rsquo;s go ahead and install Ansible.&lt;/p&gt;</description>
     </item>
     

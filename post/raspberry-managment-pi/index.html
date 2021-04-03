@@ -181,6 +181,10 @@
                             Ansible
                         </a>
                         
+                        <a class="tag" href="/tags/ubuntu" title="Ubuntu">
+                            Ubuntu
+                        </a>
+                        
                     </div>
                     <h1>ManagementPi</h1>
                     <h2 class="subheading"></h2>
@@ -216,24 +220,138 @@
 
                 
                 <header>
-                    <h2>TOC</h2>
+                    <h2>Contents</h2>
                 </header>
-                <nav id="TableOfContents"></nav>
+                <nav id="TableOfContents">
+  <ul>
+    <li><a href="#install-ubuntu-2004-on-a-microsd-card">Install Ubuntu 20.04 on a microSD card</a></li>
+    <li><a href="#wi-fi-or-ethernet-cable">Wi-Fi or Ethernet cable</a></li>
+    <li><a href="#booting-raspberry-pi-with-ubuntu-2004-lts">Booting Raspberry Pi with Ubuntu 20.04 LTS</a></li>
+    <li><a href="#access-ubuntu-2004-for-raspberry-pi-via-ssh">Access Ubuntu 20.04 for Raspberry Pi via SSH</a></li>
+    <li><a href="#change-keyboard-settings-on-ubuntu-2004-server">Change keyboard settings on Ubuntu 20.04 Server</a></li>
+    <li><a href="#changing-the-time-zone">Changing the time zone</a></li>
+    <li><a href="#set-hostname">Set Hostname</a></li>
+    <li><a href="#update-your-system-to-the-latest-version">Update your system to the latest version</a></li>
+    <li><a href="#optional-tweaks">Optional Tweaks</a>
+      <ul>
+        <li><a href="#ssh-keys">SSH Keys</a></li>
+        <li><a href="#end-password-prompts-for-sudo">End password prompts for Sudo</a></li>
+        <li><a href="#creating-a-nice-ascii-art-banner">Creating a nice ASCII-Art-Banner</a></li>
+        <li><a href="#bash">Bash</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
                 
                 <p>Owning a home lab for testing things like infrastructure as code (IaC), containers, and Kubernetes and always wanted to orchestrate the environment with exactly these technologies? Here&rsquo;s an easy way on how to build an always-on management server, based on a spare Raspberry Pi.</p>
 <p>I always like to try out new technologies, especially in the areas of automation and containers. From my personal experience, the best way to improve knowledge about new things is to play with and study them in a safe environment where you can break and fix things easily. So, why not creating something which can manage that kind of environment using the same technologies?</p>
 <p>This is what this short series is about, building a small management server with the most essential tools to orchestrate the lab, deploy containers and manage my containerized home automation. The management server is built on a spare Raspberry Pi 3+ using open source software only.</p>
 <p>Now, let&rsquo;s start with an overview of this short series of blog posts on how to create a ManagementPi for your home lab.</p>
 <ul>
-<li><a href="../raspberry-ubuntu-20.04">Ubuntu Focal Fossa (20.04) on Raspberry Pi 3+</a></li>
-<li><a href="../raspberry-ansible">Ansible on the ManagementPi</a></li>
-<li><a href="../raspberry-docker">Docker on the ManagementPi</a></li>
+<li>Ubuntu Focal Fossa (20.04) on Raspberry Pi 3+</li>
+<li><a href="../raspberry-ansible-docker">Ansible &amp; Docker on the ManagementPi</a></li>
 <li><a href="../raspberry-playbooks">First Playbooks</a></li>
 <li>Manage remote Containers</li>
 <li>Quickly create a Kubernetes Playground</li>
 <li>CI/CD for my Home Automation</li>
 </ul>
 <p>Any feedback is welcome :-)</p>
+<h2 id="install-ubuntu-2004-on-a-microsd-card">Install Ubuntu 20.04 on a microSD card</h2>
+<p>The easiest way to install Ubuntu 20.04 on a microSD card is the <a href="https://www.raspberrypi.org/software/">Raspberry Pi Imager</a>. It is available for Ubuntu, Windows, and macOS.</p>
+<p><em>Important: Installing Ubuntu 20.04 on the microSD card will erase all data on the flash drive. So make sure that there is no important data on it.</em></p>
+<p>After downloading the Raspberry Pi Imager, insert your microSD card into your computer and start the tool. Now choose which version of Ubuntu 20.04 you want to install. For our ManagementPi, I&rsquo;d recommend the following:</p>
+<p><code>Other general purpose OS --&gt; Ubuntu --&gt; Ubuntu Server 20.04 LTS (RPi 3/4/400)</code></p>
+<p>Furthermore, you choose the SD card — if there is only one plugged into the computer, the choice should not be difficult. Then click on Write and the installation process begins. Depending on your internet speed, the download will take a few minutes.</p>
+<p>Before the first start, you can already prepare the Raspberry Pi with Ubuntu 20.04 This is recommended, especially if you want to connect the device to the network via Wi-Fi.</p>
+<h2 id="wi-fi-or-ethernet-cable">Wi-Fi or Ethernet cable</h2>
+<p>The first question will be whether you want to connect the Raspberry Pi to the network via Wi-Fi or Ethernet cable. With a cable, this is easy because you don’t have to do anything else.</p>
+<p>If you want to configure the Raspberry Pi with Ubuntu 20.04 for wireless networking before the first boot, a small configuration step is necessary.</p>
+<p>Let’s assume the microSD card is still in your computer, look for the partition <code>system-boot</code>. If necessary, you have to eject the disk and plug it in again. The partition contains configuration files that are loaded during the first boot. This is similar to configuring Raspbian for headless use.</p>
+<p>On the partition, you will find a file <code>network-config</code>. Open it with a text editor and adapt the <code>wifis</code>-section to your needs.</p>
+<p>For example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">wifis</span>:
+  <span style="color:#f92672">wlan0</span>:
+    <span style="color:#f92672">dhcp4</span>: <span style="color:#66d9ef">true</span>
+    <span style="color:#f92672">optional</span>: <span style="color:#66d9ef">true</span>
+    <span style="color:#f92672">access-points</span>:
+      <span style="color:#f92672">HomeNetwork</span>:
+        <span style="color:#f92672">password</span>: <span style="color:#e6db74">&#34;topsecret&#34;</span>
+</code></pre></div><p><em>Important: If your Wi-Fi network name contains a space, you must enclose the name in quotation marks: “Home Network”.</em></p>
+<p>You can also change the network settings later by editing the file <code>/etc/netplan/50-cloud-init.yaml</code>.</p>
+<p>Wi-Fi should work now with Ubuntu 20.04 LTS on the Raspberry Pi</p>
+<h2 id="booting-raspberry-pi-with-ubuntu-2004-lts">Booting Raspberry Pi with Ubuntu 20.04 LTS</h2>
+<p>Now insert the microSD card into your Raspberry Pi and start the system.</p>
+<h2 id="access-ubuntu-2004-for-raspberry-pi-via-ssh">Access Ubuntu 20.04 for Raspberry Pi via SSH</h2>
+<p>I prefer to run my Pis headless without a keyboard or monitor attached. So I recommend checking your router or DHCP server for the assigned IP address(es) of the Pi and directly connect via SSH.</p>
+<p>You may want to give a static IP address to a server anyway. I always do this via DHCP server because the IP address is then bound to the MAC address. Even when I install a new operating system, I know what IP address the device has. Just as a thought.</p>
+<p><em>Important: Username and password are <code>ubuntu</code> by default (both the same).</em></p>
+<p>When you log in for the first time, the system will immediately ask you to change your password. This is useful because the SSH server is activated by default. If you don’t change the password, everyone on the same network can access your Raspberry Pi.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ssh ubuntu@&lt;IP address of the Raspberry Pi&gt;
+</code></pre></div><h2 id="change-keyboard-settings-on-ubuntu-2004-server">Change keyboard settings on Ubuntu 20.04 Server</h2>
+<p>If you ever connect your Pi with a keyboard and monitor you should potentially change the keyboard layout is the next step. Use the command on the console:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">L<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;de&#39;</span> <span style="color:#f92672">&amp;&amp;</span> sudo sed -i <span style="color:#e6db74">&#39;s/XKBLAYOUT=\&#34;\w*&#34;/XKBLAYOUT=\&#34;&#39;</span>$L<span style="color:#e6db74">&#39;\&#34;/g&#39;</span> /etc/default/keyboard
+</code></pre></div><p>Specify <code>L</code> with whatever layout you require.</p>
+<h2 id="changing-the-time-zone">Changing the time zone</h2>
+<p>You should also be aware that the timezone is set to UTC. If you want to change that as well use the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo timedatectl set-timezone Europe/Berlin
+</code></pre></div><p>Now you can check with <code>date</code> whether this has worked or not.</p>
+<h2 id="set-hostname">Set Hostname</h2>
+<p>To change the hostname of your Pi, set it within the file <code>/etc/hostname</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo vi /etc/hostname
+</code></pre></div><h2 id="update-your-system-to-the-latest-version">Update your system to the latest version</h2>
+<p>As a last step for now, go for a system update.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo apt update
+sudo apt upgrade -y
+</code></pre></div><p>After you are done reboot the system.</p>
+<h2 id="optional-tweaks">Optional Tweaks</h2>
+<p>Typically I make some minor tweaks on Linux servers, which are all optional of course. Here&rsquo;s what I do:</p>
+<h3 id="ssh-keys">SSH Keys</h3>
+<p>To simplify ssh authentication I add my public key stored on my workstation to the Linux server. I do this with:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ssh-copy-ip ubuntu@&lt;IP address of the Raspberry Pi&gt;
+</code></pre></div><p>Doing so will enable SSH key authentication and I&rsquo;m not required to type in the password anymore.</p>
+<h3 id="end-password-prompts-for-sudo">End password prompts for Sudo</h3>
+<p>Next, I&rsquo;d like to end <code>sudo</code> password prompts. If you like, you can disable them for the <code>ubuntu</code>-user with</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo visudo -f /etc/sudoers.d/custom-users
+</code></pre></div><p>and insert the following line</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#e6db74">`</span>ubuntu ALL<span style="color:#f92672">=(</span>ALL<span style="color:#f92672">)</span> NOPASSWD:ALL<span style="color:#e6db74">`</span>
+</code></pre></div><h3 id="creating-a-nice-ascii-art-banner">Creating a nice ASCII-Art-Banner</h3>
+<p>So that you always know that you are working on your management server, you can create a SSH login banner with <code>figlet</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo apt install -y figlet
+figlet <span style="color:#e6db74">&#34;M4N4G3M3NT P1&#34;</span> &gt; /tmp/motd <span style="color:#f92672">&amp;&amp;</span> sudo mv /tmp/motd /etc/motd
+</code></pre></div><h3 id="bash">Bash</h3>
+<p>Ubuntu by default uses bash as the shell. Here are some small tweaks I typically add to my <code>.bashrc</code>.</p>
+<ul>
+<li><code>scr</code> will reattach to a possibly already running screen session. If there is none, it will recreate one.</li>
+<li><code>..</code> eases jumping multiple levels down from the current directory. A <code>.. 3</code> would be equivalent to <code>cd ../../../</code></li>
+<li><code>tc</code> lists all your custom functions available in your current shell</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cp ~/.bashrc ~/.bashrc.orig
+cat <span style="color:#e6db74">&lt;&lt;EOF &gt;&gt; ~/.bashrc
+</span><span style="color:#e6db74">function scr {
+</span><span style="color:#e6db74">    if screen -ls | grep -q Main; then
+</span><span style="color:#e6db74">         # reattach to Main:
+</span><span style="color:#e6db74">         screen -xr Main
+</span><span style="color:#e6db74">    else
+</span><span style="color:#e6db74">         # name session &#34;Main&#34;:
+</span><span style="color:#e6db74">         screen -S Main
+</span><span style="color:#e6db74">    fi
+</span><span style="color:#e6db74">   }
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">function .. (){
+</span><span style="color:#e6db74">    local arg=\${1:-1};
+</span><span style="color:#e6db74">    local dir=&#34;&#34;
+</span><span style="color:#e6db74">    while [ \$arg -gt 0 ]; do
+</span><span style="color:#e6db74">        dir=&#34;../\$dir&#34;
+</span><span style="color:#e6db74">        arg=\$((\$arg - 1));
+</span><span style="color:#e6db74">    done
+</span><span style="color:#e6db74">    cd \$dir #&gt;&amp;/dev/null
+</span><span style="color:#e6db74">}
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">tc() { set \${*,,} ; echo \${*^} ; }
+</span><span style="color:#e6db74">EOF</span>
+
+source ~/.bashrc
+</code></pre></div>
 
                 
 
@@ -242,7 +360,7 @@
                     
                     
                     <li class="next">
-                        <a href="/post/raspberry-ubuntu-20.04/" data-toggle="tooltip" data-placement="top" title="Ubuntu Focal Fossa (20.04) on the ManagementPi">Next
+                        <a href="/post/raspberry-ansible-docker/" data-toggle="tooltip" data-placement="top" title="Install Ansible &amp; Docker on the ManagementPi">Next
                             Post &rarr;</a>
                     </li>
                     
@@ -250,6 +368,16 @@
 
                 
 <div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 3703; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+    };
+</script>
+
 
 
 
@@ -287,15 +415,7 @@
                         
                         
                         
-                        <a href="/tags/raspberrypi" title="raspberrypi">
-                            raspberrypi
-                        </a>
                         
-                        
-                        
-                        <a href="/tags/ubuntu" title="ubuntu">
-                            ubuntu
-                        </a>
                         
                         
                     </div>

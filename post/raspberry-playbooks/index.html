@@ -212,7 +212,7 @@
 
                 
                 <header>
-                    <h2>TOC</h2>
+                    <h2>Contents</h2>
                 </header>
                 <nav id="TableOfContents">
   <ul>
@@ -228,7 +228,8 @@
                 <p>Let&rsquo;s start playing with Ansible.</p>
 <h2 id="file-structure-on-the-managementpi">File Structure on the ManagementPi</h2>
 <p>For the start, we need to create a very simple file structure to host our future Ansible playbooks, the inventory, variables and secrets.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mkdir -p ~/manager/inventory
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mkdir -p ~/manager/files
+mkdir -p ~/manager/inventory
 mkdir -p ~/manager/vars
 </code></pre></div><p>We will place the inventory file within <code>manager/inventory</code>, and our variables and secrets within an envrypted vault file in <code>manager/vars</code>. For now, our future playbooks will go to the <code>manager</code> directory directly.</p>
 <h2 id="inventory">Inventory</h2>
@@ -445,7 +446,7 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/raspberry-docker/" data-toggle="tooltip" data-placement="top" title="Install Docker on the ManagementPi">&larr;
+                        <a href="/post/raspberry-ansible-docker/" data-toggle="tooltip" data-placement="top" title="Install Ansible &amp; Docker on the ManagementPi">&larr;
                             Previous Post</a>
                     </li>
                     
@@ -454,6 +455,16 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
 
                 
 <div id="disqus-comment"></div>
+
+<div id="hyvor-talk-view"></div>
+<script type="text/javascript">
+    var HYVOR_TALK_WEBSITE = 3703; 
+    var HYVOR_TALK_CONFIG = {
+        url: false,
+        id: false
+    };
+</script>
+
 
 
 
@@ -491,15 +502,7 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
                         
                         
                         
-                        <a href="/tags/raspberrypi" title="raspberrypi">
-                            raspberrypi
-                        </a>
                         
-                        
-                        
-                        <a href="/tags/ubuntu" title="ubuntu">
-                            ubuntu
-                        </a>
                         
                         
                     </div>
