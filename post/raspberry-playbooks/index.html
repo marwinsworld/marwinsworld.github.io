@@ -227,11 +227,11 @@
                 
                 <p>Let&rsquo;s start playing with Ansible.</p>
 <h2 id="file-structure-on-the-managementpi">File Structure on the ManagementPi</h2>
-<p>For the start, we need to create a very simple file structure to host our future Ansible playbooks, the inventory, variables and secrets.</p>
+<p>For the start, we need to create a very simple file structure to host our future Ansible playbooks, the inventory, variables, secrets and additionally required scripts.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mkdir -p ~/manager/files
 mkdir -p ~/manager/inventory
 mkdir -p ~/manager/vars
-</code></pre></div><p>We will place the inventory file within <code>manager/inventory</code>, and our variables and secrets within an envrypted vault file in <code>manager/vars</code>. For now, our future playbooks will go to the <code>manager</code> directory directly.</p>
+</code></pre></div><p>We will place the inventory file within <code>manager/inventory</code>, and our variables and secrets within an encrypted vault file in <code>manager/vars</code>. For now, our future playbooks will go to the <code>manager</code> directory directly.</p>
 <h2 id="inventory">Inventory</h2>
 <p>Ok, before we can start playing with Ansible, we need to tell Ansible about our home lab, of course. In public cloud environments or real-life datacenters, we&rsquo;d do that with dynamic inventories, since the environment is typically changing continuously. At least within my home lab that is not the case. For that reason, I can stick to a static inventory file.</p>
 <p>Let&rsquo;s go ahead and create one, which is an easy task since we can define that with a simple yaml file. We create that file within the directory <code>manager/inventory</code> and name it <code>hosts.yaml</code>.</p>

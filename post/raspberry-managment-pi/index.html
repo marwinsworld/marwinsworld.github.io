@@ -237,7 +237,7 @@
         <li><a href="#ssh-keys">SSH Keys</a></li>
         <li><a href="#end-password-prompts-for-sudo">End password prompts for Sudo</a></li>
         <li><a href="#creating-a-nice-ascii-art-banner">Creating a nice ASCII-Art-Banner</a></li>
-        <li><a href="#bash">Bash</a></li>
+        <li><a href="#bash-tweaks">Bash Tweaks</a></li>
       </ul>
     </li>
   </ul>
@@ -317,8 +317,14 @@ sudo apt upgrade -y
 </code></pre></div><h3 id="creating-a-nice-ascii-art-banner">Creating a nice ASCII-Art-Banner</h3>
 <p>So that you always know that you are working on your management server, you can create a SSH login banner with <code>figlet</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo apt install -y figlet
-figlet <span style="color:#e6db74">&#34;M4N4G3M3NT P1&#34;</span> &gt; /tmp/motd <span style="color:#f92672">&amp;&amp;</span> sudo mv /tmp/motd /etc/motd
-</code></pre></div><h3 id="bash">Bash</h3>
+figlet <span style="color:#e6db74">&#34;ManagementPi&#34;</span> &gt; /tmp/motd <span style="color:#f92672">&amp;&amp;</span> sudo mv /tmp/motd /etc/motd
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt"> __  __                                                   _   ____  _
+|  \/  | __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_|  _ \(_)
+| |\/| |/ _` | &#39;_ \ / _` |/ _` |/ _ \ &#39;_ ` _ \ / _ \ &#39;_ \| __| |_) | |
+| |  | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_|  __/| |
+|_|  |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|_|   |_|
+                          |___/
+</code></pre></div><h3 id="bash-tweaks">Bash Tweaks</h3>
 <p>Ubuntu by default uses bash as the shell. Here are some small tweaks I typically add to my <code>.bashrc</code>.</p>
 <ul>
 <li><code>scr</code> will reattach to a possibly already running screen session. If there is none, it will recreate one.</li>
