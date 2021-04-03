@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tops on MarWinsWorld</title>
+    <link>https://marwinsworld.github.io/top/</link>
+    <description>Recent content in Tops on MarWinsWorld</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="https://marwinsworld.github.io/top/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://marwinsworld.github.io/top/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://marwinsworld.github.io/top/about/</guid>
+      <description>Like as many husbands, fathers, and curious human beings, I do have lots of interests outside my family and professional life. For years I&amp;rsquo;m improving my home automation environment continuously, integrating more and more entities, sensors, actors, etc. Sometimes I&amp;rsquo;m driving my family nuts with it, but it improved over time. I&amp;rsquo;m a hobby backyard astronomer, scuba diver, gardener, and very shortly a dog owner as well, next to rabbits and birds.</description>
+    </item>
+    
+  </channel>
+</rss>
