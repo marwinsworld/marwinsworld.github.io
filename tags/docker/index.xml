@@ -6,14 +6,14 @@
     <description>Recent content in Docker on MarWinsWorld</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Mar 2021 17:12:47 +0200</lastBuildDate><atom:link href="https://marwinsworld.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 31 Mar 2021 18:22:47 +0200</lastBuildDate><atom:link href="https://marwinsworld.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Install Ansible &amp; Docker on the ManagementPi</title>
+      <title>Ansible &amp; Docker on the ManagementPi</title>
       <link>https://marwinsworld.github.io/post/raspberry-ansible-docker/</link>
-      <pubDate>Sun, 28 Mar 2021 17:12:47 +0200</pubDate>
+      <pubDate>Wed, 31 Mar 2021 18:22:47 +0200</pubDate>
       
       <guid>https://marwinsworld.github.io/post/raspberry-ansible-docker/</guid>
-      <description>&lt;p&gt;After we&amp;rsquo;ve set up the OS, let&amp;rsquo;s go ahead and install Ansible.&lt;/p&gt;</description>
+      <description>&lt;p&gt;After we&amp;rsquo;ve set up the OS, let&amp;rsquo;s go ahead and install Ansible and Docker.&lt;/p&gt;</description>
     </item>
     
   </channel>
