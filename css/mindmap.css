@@ -2,7 +2,7 @@
     font-family: "STHeitiSC-Light", "STHeiti", "Hei", "Heiti SC", "Microsoft Yahei", Arial, sans-serif;
     -webkit-user-select: none;
     user-select: none;
-    position:  relative;
+    position: relative;
 }
 
 .km-view .km-receiver {
@@ -93,19 +93,19 @@
 }
 
 .mindmap {
-	/*width: inherit;*/
-	width: 100%;
-	border: 1px solid #ccc;
+    /*width: inherit;*/
+    width: 100%;
+    border: 1px solid #ccc;
 }
 
 .mindmap-sm {
-	height: 300px;
+    height: 300px;
 }
 
 .mindmap-md {
-	height: 500px;
+    height: 500px;
 }
 
 .mindmap-lg {
-	height: 800px;
+    height: 800px;
 }
