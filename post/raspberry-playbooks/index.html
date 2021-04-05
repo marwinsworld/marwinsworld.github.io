@@ -278,7 +278,7 @@ mkdir -p ~/manager/vars
         <span style="color:#f92672">k8sn3.localdomain</span>:
           <span style="color:#f92672">ansible_ssh_user</span>: <span style="color:#ae81ff">k8s</span>
 
-</code></pre></div><p>Within the file above, I&rsquo;m defining basically the four server groups - smarthome, media, dev and k8s. Within the smarthome group there are the smarthome server it self, running multiple containers for my home automation, an mqtt bridge which relays authenticated mqtt messages to my internal mqtt server and the iobroker which reads energy and water consumption data. Similar are the groups media and dev.</p>
+</code></pre></div><p>Within the file above, I&rsquo;m defining basically four server groups - smarthome, media, dev and k8s. Within the smarthome group there are the smarthome server it self, running multiple containers for my home automation, an mqtt bridge which relays authenticated mqtt messages to my internal mqtt server and the iobroker which reads energy and water consumption data. Similar are the groups media and dev.</p>
 <p>The group k8s consolidates my Kubernetes three node cluster.</p>
 <h2 id="a-playbook-to-start-with---update-the-development-host">A Playbook to start with - Update the Development Host</h2>
 <p>So, this is going to be a very easy playbook. Since in my example the development host I&rsquo;m using is based on Ubuntu as well, I can simply use the Ansible module for <code>apt</code> to update all the packages to the latest versions.</p>
