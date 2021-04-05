@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="First Ansible Playbooks" />
-    <meta property="og:title" content="First Ansible Playbooks" />
-    <meta property="twitter:title" content="First Ansible Playbooks" />
+    <meta name="title" content="First Ansible Playbooks on the ManagementPi" />
+    <meta property="og:title" content="First Ansible Playbooks on the ManagementPi" />
+    <meta property="twitter:title" content="First Ansible Playbooks on the ManagementPi" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Markus, Winkler, Raspberry, Pi, Docker, Kubernetes, Container, Smart Home, Automation, API, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>First Ansible Playbooks-Markus Winkler Blog</title>
+    <title>First Ansible Playbooks on the ManagementPi-Markus Winkler Blog</title>
 
     <link rel="canonical" href="/post/raspberry-playbooks/">
 
@@ -178,7 +178,7 @@
                         </a>
                         
                     </div>
-                    <h1>First Ansible Playbooks</h1>
+                    <h1>First Ansible Playbooks on the ManagementPi</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
@@ -239,9 +239,9 @@ mkdir -p ~/manager/vars
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi ~/manager/inventory/hosts.yaml
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">all</span>:
   <span style="color:#f92672">children</span>:
-    <span style="color:#f92672">home</span>:
+    <span style="color:#f92672">smarthome</span>:
       <span style="color:#f92672">hosts</span>:
-        <span style="color:#f92672">smarthome</span>:
+        <span style="color:#f92672">smarthomesrv</span>:
           <span style="color:#f92672">ansible_host</span>: <span style="color:#ae81ff">smarthome.localdomain</span>
           <span style="color:#f92672">ansible_ssh_user</span>: <span style="color:#ae81ff">markus</span>
 
@@ -278,8 +278,10 @@ mkdir -p ~/manager/vars
         <span style="color:#f92672">k8sn3.localdomain</span>:
           <span style="color:#f92672">ansible_ssh_user</span>: <span style="color:#ae81ff">k8s</span>
 
-</code></pre></div><h2 id="a-playbook-to-start-with---update-the-development-host">A Playbook to start with - Update the Development Host</h2>
-<p>So, this is going to be a very easy playbook. Since in my example the development host I&rsquo;m using is based on Ubuntu as well, we simply use the Ansible module for <code>apt</code> to update all the packages to the latest versions</p>
+</code></pre></div><p>Within the file above, I&rsquo;m defining basically the four server groups - smarthome, media, dev and k8s. Within the smarthome group there are the smarthome server it self, running multiple containers for my home automation, an mqtt bridge which relays authenticated mqtt messages to my internal mqtt server and the iobroker which reads energy and water consumption data. Similar are the groups media and dev.</p>
+<p>The group k8s consolidates my Kubernetes three node cluster.</p>
+<h2 id="a-playbook-to-start-with---update-the-development-host">A Playbook to start with - Update the Development Host</h2>
+<p>So, this is going to be a very easy playbook. Since in my example the development host I&rsquo;m using is based on Ubuntu as well, I can simply use the Ansible module for <code>apt</code> to update all the packages to the latest versions.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">vi ~/manager/update-dev.yaml
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">---
 - <span style="color:#f92672">hosts</span>: <span style="color:#ae81ff">dev</span>
@@ -454,20 +456,75 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
                 </ul>
 
                 
-<div id="disqus-comment"></div>
+                <div id="comments">
+                    
+                      <script>
+  var id =  3 ;
 
-<div id="hyvor-talk-view"></div>
-<script type="text/javascript">
-    var HYVOR_TALK_WEBSITE = 3703; 
-    var HYVOR_TALK_CONFIG = {
-        url: false,
-        id: false
+  if (id)
+  {
+    let url = "https://github.com/marwinsworld/marwinsworld.github.io/issues/".concat(id);
+    let api_url = "https://api.github.com/repos/marwinsworld/marwinsworld.github.io/issues/".concat(id, "/comments");
+    
+    var commentsDiv = document.getElementById("comments");
+
+    let xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.open("GET", api_url);
+    xhr.setRequestHeader("Accept", "application/vnd.github.v3.html+json");
+    xhr.send();
+
+    xhr.onload = function()
+    {
+      if (xhr.status != 200)
+      {
+        let errorText = document.createElement("p");
+        errorText.innerHTML = "<i>Comments for this post yet are not opened yet (or you have GitHub scripts disabled).</i>";
+        commentsDiv.appendChild(errorText);
+      }
+      else
+      {
+        let comments = xhr.response;
+
+        let mainHeader = document.createElement("h2");
+        mainHeader.innerHTML = "Comments: ".concat(comments.length);
+        commentsDiv.appendChild(mainHeader);
+
+        let issueLink = document.createElement("p");
+        issueLink.innerHTML = "<i>You can leave a comment using this <a href='".concat(url, "'>GitHub issue</a>.</i>");
+        commentsDiv.appendChild(issueLink);
+        
+        comments.forEach(function(comment)
+        {
+            let commentContent = document.createElement("div");
+            commentContent.setAttribute('class', 'gh-comment')
+            commentContent.innerHTML = "".concat(
+                "<div class='gh-header'>",
+                
+                  "<div style='margin:auto 0;'>",
+                    "<b><a class='gh-username' href='", comment.user.html_url, "'>", comment.user.login, "</a></b>",
+                    " commented at <em>", new Date(comment.created_at), "</em>",
+                  "</div>",
+                "</div>",
+                "<div class='gh-body'>",
+                  comment.body_html,
+                "</div>"
+            );
+            commentsDiv.appendChild(commentContent);
+        });
+      }
     };
+
+    xhr.onerror = function()
+    {
+      let errorText = document.createElement("p");
+      errorText.innerHTML = "<i>Some error loading comments.</i>";
+      commentsDiv.appendChild(errorText);
+    };
+  }
 </script>
-
-
-
-
+                    
+                </div>
             </div>
             
             <div class="
@@ -514,7 +571,10 @@ echo <span style="color:#e6db74">&#39;Please choose: &#39;</span>
             </div>
         </div>
     </div>
+
 </article>
+
+
 
 
 
